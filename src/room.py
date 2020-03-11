@@ -1,8 +1,17 @@
-# Implement a class to hold room information. This should have name and
-# description attributes.
+class Room:
+    def __init__(self, name, description, items=None):
+        # Basic room info
+        self.name = name
+        self.description = description
 
-# The room should have name and description attributes.
+        # These are the connected rooms in each direction
+        self.n_to = None
+        self.s_to = None
+        self.e_to = None
+        self.w_to = None
 
-# The room should also have n_to, s_to, e_to, and w_to attributes which point to the room in that respective direction.
+        # Items inside this room
+        self.items = items
 
-# The Room class should be extended with a list that holds the Items that are currently in that room.
+    def __str__(self):
+        return f"You entered the {self.name} room.\n{self.description}\n Items: {self.items}"
