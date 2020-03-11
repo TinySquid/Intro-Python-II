@@ -1,4 +1,7 @@
+import os
 from room import Room
+from player import Player
+
 
 # Declare all the rooms
 # dict with keys... Room instance values
@@ -6,25 +9,19 @@ room = {
     "outside": Room("Outside Cave Entrance", "North of you, the cave mount beckons"),
     "foyer": Room(
         "Foyer",
-        """Dim light filters in from the south. Dusty
-passages run north and east.""",
+        "Dim light filters in from the south. Dusty passages run north and east.",
     ),
     "overlook": Room(
         "Grand Overlook",
-        """A steep cliff appears before you, falling
-into the darkness. Ahead to the north, a light flickers in
-the distance, but there is no way across the chasm.""",
+        "A steep cliff appears before you, falling into the darkness. Ahead to the north, a light flickers in the distance, but there is no way across the chasm.",
     ),
     "narrow": Room(
         "Narrow Passage",
-        """The narrow passage bends here from west
-to north. The smell of gold permeates the air.""",
+        "The narrow passage bends here from west to north. The smell of gold permeates the air.",
     ),
     "treasure": Room(
         "Treasure Chamber",
-        """You've found the long-lost treasure
-chamber! Sadly, it has already been completely emptied by
-earlier adventurers. The only exit is to the south.""",
+        "You've found the long-lost treasure chamber! Sadly, it has already been completely emptied by earlier adventurers. The only exit is to the south.",
     ),
 }
 
@@ -45,9 +42,18 @@ room["treasure"].s_to = room["narrow"]
 #
 
 # Make a new player object that is currently in the 'outside' room.
+player = Player("Bob Ross", room["outside"])
 
-# Write a loop that:
-#
+# Possible player commands
+verb_cmds = {
+    "n": lambda: player.move("n"),
+    "s": lambda: player.move("s"),
+    "e": lambda: player.move("e"),
+    "w": lambda: player.move("w"),
+    "q": lambda: exit(),
+}
+
+
 # * Prints the current room name
 # * Prints the current description (the textwrap module might be useful here).
 # * Waits for user input and decides what to do.
@@ -59,3 +65,31 @@ room["treasure"].s_to = room["narrow"]
 # Add the i and inventory commands that both show a list of items currently carried by the player.
 #
 # If the user enters "q", quit the game.
+
+
+def print_guide():
+    print("\nMovement commands: n, s, e, w")
+    print("Other commands: i (inventory), p (pickup), d (drop)\n")
+
+
+# Clear screen in preparation for game
+os.system("cls")
+
+# REPL
+while True:
+    print(player.current_room)
+
+    print_guide()
+
+    player_input = input("-> ")
+
+    os.system("cls")
+
+    command = player_input.split(" ")
+
+    if len(command) > 1:
+        # Command is in the format "verb object"
+        pass
+    else:
+        verb_cmds.get(player_input, lambda: print("Invalid command!\n"))()
+
