@@ -17,5 +17,5 @@ class Room:
         self.items = items
 
     def __str__(self):
-        return f"You entered the {self.name} room.\n{textwrap.fill(self.description, 70)}\nItems: {self.items}"
+        return f"Room: {self.name}\n{textwrap.fill(self.description, 70)}"
 
