@@ -1,3 +1,6 @@
+import textwrap
+
+
 class Room:
     def __init__(self, name, description, items=None):
         # Basic room info
@@ -14,4 +17,5 @@ class Room:
         self.items = items
 
     def __str__(self):
-        return f"You entered the {self.name} room.\n{self.description}\n Items: {self.items}"
+        return f"You entered the {self.name} room.\n{textwrap.fill(self.description, 70)}\nItems: {self.items}"
+
