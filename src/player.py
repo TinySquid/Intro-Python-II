@@ -16,20 +16,16 @@ class Player:
         # Player inventory
         self.inventory = []
 
+        self.directions = {"n": "north", "s": "south", "e": "east", "w": "west"}
+
     def move(self, direction):
         """ Moves player in provided direction to room exit point """
 
-        paths = {
-            "n": self.current_room.n_to,
-            "s": self.current_room.s_to,
-            "e": self.current_room.e_to,
-            "w": self.current_room.w_to,
-        }
+        possible_paths = self.current_room.get_exits()
 
-        next_room = paths[direction]
+        next_room = possible_paths[direction]
 
         if next_room:
             self.current_room = next_room
         else:
-            print("Invalid path!")
-
+            print(f"There is no exit to the {self.directions[direction]}\n")

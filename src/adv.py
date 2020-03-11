@@ -28,14 +28,13 @@ room = {
 
 # Link rooms together
 
-room["outside"].n_to = room["foyer"]
-room["foyer"].s_to = room["outside"]
-room["foyer"].n_to = room["overlook"]
-room["foyer"].e_to = room["narrow"]
-room["overlook"].s_to = room["foyer"]
-room["narrow"].w_to = room["foyer"]
-room["narrow"].n_to = room["treasure"]
-room["treasure"].s_to = room["narrow"]
+room["outside"].set_exits({"n": room["foyer"]})
+room["foyer"].set_exits(
+    {"n": room["overlook"], "s": room["outside"], "e": room["narrow"]}
+)
+room["overlook"].set_exits({"s": room["foyer"]})
+room["narrow"].set_exits({"n": room["treasure"], "w": room["foyer"]})
+room["treasure"].set_exits({"s": room["narrow"]})
 
 #
 # Main
@@ -68,8 +67,8 @@ verb_cmds = {
 
 
 def print_guide():
-    print("\nMovement commands: n, s, e, w")
-    print("Other commands: i (inventory), p (pickup), d (drop)\n")
+    print("\nMovement commands: [n]orth, [s]outh, [e]ast, [w]est")
+    print("Other commands: [i]nventory, [p]ickup, [d]rop, [q]uit\n")
 
 
 # Clear screen in preparation for game
