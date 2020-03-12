@@ -31,5 +31,8 @@ class Room:
         return self.exits
 
     def __str__(self):
-        return f"Room: {self.name}\n{textwrap.fill(self.description, 70)}"
+        if self.is_lit:
+            return f"Room: {self.name}\n{textwrap.fill(self.description, 70)}"
+        else:
+            return "It's pitch black in here!"
 

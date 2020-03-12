@@ -6,14 +6,18 @@ from player import Player
 # Declare all the rooms
 # dict with keys... Room instance values
 room = {
-    "outside": Room("Outside Cave Entrance", "North of you, the cave mount beckons"),
+    "outside": Room(
+        "Outside Cave Entrance", "North of you, the cave mount beckons", is_lit=True
+    ),
     "foyer": Room(
         "Foyer",
         "Dim light filters in from the south. Dusty passages run north and east.",
+        is_lit=True,
     ),
     "overlook": Room(
         "Grand Overlook",
         "A steep cliff appears before you, falling into the darkness. Ahead to the north, a light flickers in the distance, but there is no way across the chasm.",
+        is_lit=True,
     ),
     "narrow": Room(
         "Narrow Passage",
