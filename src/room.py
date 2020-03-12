@@ -2,7 +2,7 @@ import textwrap
 
 
 class Room:
-    def __init__(self, name, description, items=None):
+    def __init__(self, name, description, is_lit=False):
         # Basic room info
         self.name = name
         self.description = description
@@ -16,7 +16,9 @@ class Room:
         }
 
         # Items inside this room
-        self.items = items
+        self.items = []
+
+        self.is_lit = is_lit
 
     def set_exits(self, exits):
         for key, value in exits.items():
