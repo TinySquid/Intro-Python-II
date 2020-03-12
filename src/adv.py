@@ -1,6 +1,14 @@
-import os
+import os, sys
+
+# Import game blueprints
 from room import Room
 from player import Player
+
+# Add items dir to sys path
+sys.path.append("/items")
+
+# Import game handheld items
+from items.item import Item
 
 
 # Declare all the rooms
@@ -33,6 +41,8 @@ room = {
 # Link rooms together
 
 room["outside"].set_exits({"n": room["foyer"]})
+room["outside"].set_items([Item("Potato", "It's... Just a potato.")])
+
 room["foyer"].set_exits(
     {"n": room["overlook"], "s": room["outside"], "e": room["narrow"]}
 )
