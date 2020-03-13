@@ -1,31 +1,38 @@
-import os, sys
+import sys
 
 # Import game blueprints
 from room import Room
 from player import Player
+
+# Utility func to clear screen on all platforms
+from utility import clear_terminal
 
 # Add items dir to sys path
 sys.path.append("/items")
 
 # Import game handheld items
 from items.item import Item
-
+from items.lantern import Lantern
+from items.coin import Coin
 
 # Declare all the rooms
 # dict with keys... Room instance values
 room = {
     "outside": Room(
-        "Outside Cave Entrance", "North of you, the cave mount beckons", is_lit=True
+        "Outside Cave Entrance",
+        "North of you, the cave mount beckons",
+        # loot=[
+        #     Item("Potato", "It's... Just a potato."),
+        #     Item("Rusty Sword", "How long has this been here?",),
+        # ],
     ),
     "foyer": Room(
         "Foyer",
         "Dim light filters in from the south. Dusty passages run north and east.",
-        is_lit=True,
     ),
     "overlook": Room(
         "Grand Overlook",
         "A steep cliff appears before you, falling into the darkness. Ahead to the north, a light flickers in the distance, but there is no way across the chasm.",
-        is_lit=True,
     ),
     "narrow": Room(
         "Narrow Passage",
@@ -41,14 +48,21 @@ room = {
 # Link rooms together
 
 room["outside"].set_exits({"n": room["foyer"]})
-room["outside"].set_items([Item("Potato", "It's... Just a potato.")])
+room["outside"].set_loot(
+    [Item("Potato", "It's... Just a potato."),]
+)
 
 room["foyer"].set_exits(
     {"n": room["overlook"], "s": room["outside"], "e": room["narrow"]}
 )
+
+room["foyer"].set_loot([Lantern()])
+
 room["overlook"].set_exits({"s": room["foyer"]})
 room["narrow"].set_exits({"n": room["treasure"], "w": room["foyer"]})
 room["treasure"].set_exits({"s": room["narrow"]})
+
+room["treasure"].set_loot([Coin(13)])
 
 #
 # Main
@@ -58,51 +72,60 @@ room["treasure"].set_exits({"s": room["narrow"]})
 player = Player("Bob Ross", room["outside"])
 
 # Possible player commands
-verb_cmds = {
-    "n": lambda: player.move("n"),
-    "s": lambda: player.move("s"),
-    "e": lambda: player.move("e"),
-    "w": lambda: player.move("w"),
-    "q": lambda: exit(),
-}
+def eval_verb_command(verb):
+    verb_cmds = {
+        "n": lambda: player.move("n"),
+        "s": lambda: player.move("s"),
+        "e": lambda: player.move("e"),
+        "w": lambda: player.move("w"),
+        "i": lambda: player.inventory.print_contents(),
+        "q": lambda: exit(),
+    }
+
+    return verb_cmds.get(verb, lambda: print("Invalid command!\n"))
 
 
-# * Prints the current room name
-# * Prints the current description (the textwrap module might be useful here).
-# * Waits for user input and decides what to do.
-#
-# If the user enters a cardinal direction, attempt to move to the room there.
-# Print an error message if the movement isn't allowed.
-#
-# Valid commands are n, s, e and w which move the player North, South, East or West
-# Add the i and inventory commands that both show a list of items currently carried by the player.
-#
-# If the user enters "q", quit the game.
+def eval_verb_noun_command(verb, noun):
+    verb_noun_cmds = {
+        "get": lambda: player.take_item(noun),
+        "take": lambda: player.take_item(noun),
+        "drop": lambda: player.drop_item(noun),
+    }
+
+    return verb_noun_cmds.get(verb, lambda: print("Invalid command!\n"))
 
 
 def print_guide():
     print("\nMovement commands: [n]orth, [s]outh, [e]ast, [w]est")
-    print("Other commands: [i]nventory, [p]ickup, [d]rop, [q]uit\n")
+    print("Other commands: [i]nventory, [take] [item], [drop] [item], [q]uit\n")
 
 
 # Clear screen in preparation for game
-os.system("cls")
+clear_terminal()
 
 # REPL
 while True:
+
+    # Display room and description
     print(player.current_room)
 
+    # Display commands
     print_guide()
 
+    # Get user command
     player_input = input("-> ")
 
-    os.system("cls")
+    # Wipe terminal
+    clear_terminal()
 
+    # Get command terms
     command = player_input.split(" ")
 
+    # Determine command format
     if len(command) > 1:
-        # Command is in the format "verb object"
-        pass
+        # Command is in the format "verb noun"
+        eval_verb_noun_command(command[0], " ".join(command[1:]))()
     else:
-        verb_cmds.get(player_input, lambda: print("Invalid command!\n"))()
+        # Command is just a verb
+        eval_verb_command(command[0])()
 
